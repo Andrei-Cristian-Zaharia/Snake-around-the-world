@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnPoint()
     {
-        Vector3 postion = Random.onUnitSphere * 13f;
+        Vector3 postion = Random.onUnitSphere * 5.19f;
 
         Instantiate(PointPrefab, postion, Quaternion.identity);
 
