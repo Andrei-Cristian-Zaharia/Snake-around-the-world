@@ -22,9 +22,18 @@ public class SnakeController : MonoBehaviour
 
     public float moveSpeed;
     public float rotateSpeed;
-    Vector3 moveRotate;
+    public Vector3 moveRotate;
 
     public Transform planet;
+
+    Vector2 myCentre = new Vector2(Screen.width / 2, Screen.height / 2);
+    public float touchPos = 0;
+
+    // change this to affect how quickly the number moves toward its destination
+    public float lerpSpeed = 0.1f;
+
+    // set this as big or small as you want. I'm using a factor of the screen's size
+    float deadZone = 0.1f * Mathf.Min(Screen.width, Screen.height);
 
     private void Start()
     {
@@ -33,23 +42,39 @@ public class SnakeController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.A))
-            moveRotate = new Vector3(0, -1, 0).normalized;
+        Vector2 delta = (Vector2)Input.mousePosition - myCentre;
 
-        if (Input.GetKey(KeyCode.D))
-            moveRotate = new Vector3(0, 1, 0).normalized;
-
-        foreach (Touch touch in Input.touches)
+        // if the mouse is down / a touch is active...
+        if (Input.GetMouseButton(0) == true)
         {
-            if (touch.position.x < Screen.width / 2)
+            // for the X axis...
+            if (delta.x > deadZone)
             {
-                moveRotate = new Vector3(0, -1, 0).normalized;
+                // if we're to the right of centre and out of the deadzone, move toward 1
+                touchPos = Mathf.Lerp(touchPos, 1f, lerpSpeed);
+                moveRotate = new Vector3(0, touchPos, 0);
             }
-            else if (touch.position.x > Screen.width / 2)
+            else if (delta.x < -deadZone)
             {
-                moveRotate = new Vector3(0, 1, 0).normalized;
+                // if we're to the left of centre and out of the deadzone, move toward -1
+                touchPos = Mathf.Lerp(touchPos, -1f, lerpSpeed);
+                moveRotate = new Vector3(0, touchPos, 0);
+            }
+            else
+            {
+                // otherwise, we're in the deadzone, move toward 0
+                touchPos = 0;
+                moveRotate = new Vector3(0, touchPos, 0).normalized;
             }
         }
+        else
+        {
+            touchPos = 0;
+            moveRotate = new Vector3(0, touchPos, 0).normalized;
+        }
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            moveRotate = new Vector3(0, Input.GetAxis("Horizontal"), 0).normalized;
 
         MoveTowards();
     }
@@ -62,9 +87,8 @@ public class SnakeController : MonoBehaviour
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
 
-        if (Input.touchCount > 0)
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
-                Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
+        if (Input.GetMouseButton(0) == true)
+            Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
 
         Head.transform.GetComponent<Rigidbody>().AddForce((Head.transform.position - planet.position).normalized * -9.81f);
         Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, Quaternion.FromToRotation(Head.transform.up,
