@@ -4,10 +4,4 @@ using UnityEngine;
 
 public class SnakeBody : MonoBehaviour
 {
-    private void OnDestroy()
-    {
-        SnakeController SC = (SnakeController)FindObjectOfType(typeof(SnakeController));
-
-        SC.currentSize--;
-    }
 }

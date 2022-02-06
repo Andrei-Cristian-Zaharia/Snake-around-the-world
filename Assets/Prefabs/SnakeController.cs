@@ -5,6 +5,10 @@ using UnityEngine;
 public class SnakeController : MonoBehaviour
 {
     public GameObject Head;
+    public Transform spawnPoint;
+    public GameObject lastBody;
+
+    public float generateSpeed = 0.2f;
 
     public int size = 0;
 
@@ -14,22 +18,37 @@ public class SnakeController : MonoBehaviour
 
     public GameObject BodyPrefab;
 
-    private void Update()
+    public List<GameObject> parts = new List<GameObject>();
+
+    private void Start()
     {
-        while (currentSize < size)
+        StartCoroutine("GenerateBody");
+    }
+
+    IEnumerator GenerateBody()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(generateSpeed);
+
+            currentSize++; 
             StartCoroutine("GenerateTail");
+
+            if (currentSize == size)
+            {
+                currentSize--;
+                lastBody = parts[0];
+                parts.Remove(parts[0]);
+                Destroy(lastBody);
+            }
+        }
     }
 
     IEnumerator GenerateTail()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(generateSpeed);
 
-        Vector3 spawnPosition = new Vector3(Head.transform.position.x, Head.transform.position.y, Head.transform.position.z - distance);
-
-        GameObject newBody = Instantiate(BodyPrefab, spawnPosition, Quaternion.identity, this.transform) as GameObject;
-
-        currentSize++;
-
-        Destroy(newBody, 1);
+        GameObject newBody = Instantiate(BodyPrefab, spawnPoint.transform.position, Quaternion.identity, this.transform) as GameObject;
+        parts.Add(newBody);
     }
 }
