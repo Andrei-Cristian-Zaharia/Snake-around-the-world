@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
     [Range(16f, 100f)]
     public float powerUpsTimer;
     public float selectedTime;
+    public static float timerTime;
+    public static float currentTimerTime;
+
+    public Image displayTimer;
+    public GameObject powerUpTimer;
 
     public GameObject[] powerUpsPrefabs;
 
@@ -26,6 +31,17 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine("SpawnPoint");
         StartCoroutine("SpawnPowerUp");
+    }
+
+    private void Update()
+    {
+        if (currentTimerTime > 0)
+        {
+            powerUpTimer.SetActive(true);
+            currentTimerTime -= Time.deltaTime;
+            displayTimer.fillAmount -= 1.0f / timerTime * Time.deltaTime;
+        }
+        else { powerUpTimer.SetActive(false); displayTimer.fillAmount = 1; }
     }
 
     public static void AddScore(int currentAmount)
@@ -58,7 +74,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnPowerUp()
     {
-        yield return new WaitForSeconds(selectedTime + 10f);
+        yield return new WaitForSeconds(selectedTime + 0f);
 
         Vector3 postion = Random.onUnitSphere * 5.4f;
 

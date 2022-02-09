@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SnakeController : MonoBehaviour
 {
@@ -112,6 +113,8 @@ public class SnakeController : MonoBehaviour
     public void EnableInvulnerability()
     {
         invulnerability = true;
+        GameManager.timerTime = invulnerabilityTime;
+        GameManager.currentTimerTime = invulnerabilityTime;
         StartCoroutine("DisableInvulnerability");
     }
 
