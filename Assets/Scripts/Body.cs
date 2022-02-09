@@ -16,6 +16,14 @@ public class Body : MonoBehaviour
     {
         if (other.CompareTag("Player") && canInteract)
         {
+            SnakeController SC = (SnakeController)GameObject.FindObjectOfType(typeof(SnakeController));
+
+            if (SC.invulnerability == true)
+                return;
+            
+            GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
+            GM.SaveData();
+
             SceneManager.LoadScene("SampleScene");
         }
     }

@@ -8,6 +8,11 @@ public class SnakeController : MonoBehaviour
     public Transform spawnPoint;
     public GameObject lastBody;
 
+    public bool invulnerability;
+    public float invulnerabilityTime = 2f;
+
+    public bool move;
+
     public float generateSpeed = 0.2f;
 
     public int size = 0;
@@ -37,7 +42,7 @@ public class SnakeController : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine("GenerateBody");
+        GameManager.AddScore(size);
     }
 
     private void FixedUpdate()
@@ -81,18 +86,33 @@ public class SnakeController : MonoBehaviour
 
     void MoveTowards()
     {
-        Vector3 moveForward = new Vector3(0, 0, 1).normalized;
-        Head.transform.Translate(moveForward * moveSpeed * Time.deltaTime);
+        if (move)
+        {
+            Vector3 moveForward = new Vector3(0, 0, 1).normalized;
+            Head.transform.Translate(moveForward * moveSpeed * Time.deltaTime);
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-            Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+                Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
 
-        if (Input.GetMouseButton(0) == true)
-            Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
+            if (Input.GetMouseButton(0) == true)
+                Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
 
-        Head.transform.GetComponent<Rigidbody>().AddForce((Head.transform.position - planet.position).normalized * -9.81f);
-        Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, Quaternion.FromToRotation(Head.transform.up,
-            (Head.transform.position - planet.position).normalized) * Head.transform.rotation, rotateSpeed * Time.deltaTime);
+            Head.transform.GetComponent<Rigidbody>().AddForce((Head.transform.position - planet.position).normalized * -9.81f);
+            Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, Quaternion.FromToRotation(Head.transform.up,
+                (Head.transform.position - planet.position).normalized) * Head.transform.rotation, rotateSpeed * Time.deltaTime);
+        }
+    }
+
+    public void SpawnSnake()
+    {
+        StartCoroutine("GenerateBody");
+        move = true;
+    }
+
+    public void EnableInvulnerability()
+    {
+        invulnerability = true;
+        StartCoroutine("DisableInvulnerability");
     }
 
     IEnumerator GenerateBody()
@@ -120,5 +140,12 @@ public class SnakeController : MonoBehaviour
 
         GameObject newBody = Instantiate(BodyPrefab, spawnPoint.transform.position, Quaternion.identity, this.transform) as GameObject;
         parts.Add(newBody);
+    }
+
+    IEnumerator DisableInvulnerability()
+    {
+        yield return new WaitForSeconds(invulnerabilityTime);
+
+        invulnerability = false;
     }
 }
