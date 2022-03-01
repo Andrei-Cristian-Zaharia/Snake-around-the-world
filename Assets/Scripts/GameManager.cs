@@ -28,9 +28,6 @@ public class GameManager : MonoBehaviour
     {
         LoadData();
         snake = GameObject.FindGameObjectWithTag("Snake");
-
-        StartCoroutine("SpawnPoint");
-        StartCoroutine("SpawnPowerUp");
     }
 
     private void Update()
@@ -42,6 +39,16 @@ public class GameManager : MonoBehaviour
             displayTimer.fillAmount -= 1.0f / timerTime * Time.deltaTime;
         }
         else { powerUpTimer.SetActive(false); displayTimer.fillAmount = 1; }
+    }
+
+    public void Play()
+    {
+        SnakeController SC = snake.GetComponent<SnakeController>();
+        SC.SpawnSnake();
+        playButton.SetActive(false);
+
+        StartCoroutine("SpawnPoint");
+        StartCoroutine("SpawnPowerUp");
     }
 
     public static void AddScore(int currentAmount)
@@ -74,20 +81,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnPowerUp()
     {
-        yield return new WaitForSeconds(selectedTime + 0f);
+        yield return new WaitForSeconds(selectedTime + 5f);
 
         Vector3 postion = Random.onUnitSphere * 5.4f;
 
         GameObject selectedPowerUp = powerUpsPrefabs[Random.Range(0, powerUpsPrefabs.Length)];
 
         Instantiate(selectedPowerUp, postion, Quaternion.identity);
-    }
-
-    public void Play()
-    {
-        SnakeController SC = snake.GetComponent<SnakeController>();
-        SC.SpawnSnake();
-        playButton.SetActive(false);
     }
 
     public void SaveData()
