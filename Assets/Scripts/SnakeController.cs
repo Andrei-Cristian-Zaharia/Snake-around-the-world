@@ -5,35 +5,43 @@ using UnityEngine.UI;
 
 public class SnakeController : MonoBehaviour
 {
-    public GameObject Head;
-    public Transform spawnPoint;
-    public GameObject lastBody;
-
-    public bool invulnerability;
-    public float invulnerabilityTime = 2f;
-
     public bool move;
 
-    public float generateSpeed = 0.2f;
+    public GameObject Head;
+    public Transform spawnPoint;
+    public Transform planet;
 
+    [Space(20f)]
+    public bool invulnerability;
+    [Range(1f, 10f)]
+    public float invulnerabilityTime = 2f;
+
+    [Space(10f)]
+    public bool slow;
+    [Range(1f, 10f)]
+    public float slowTime = 4f;
+    [Range(1f, 10)]
+    public float slowPower = 2;
+
+    [Space(20f)]
     public int size = 0;
-
-    public int currentSize = 0;
-
+    public float generateSpeed = 0.2f;
+    public float moveSpeed;
+    public float rotateSpeed;
     public float distance = 0.25f;
 
+    private int currentSize = 0;
+
+    [Space(20f)]
     public GameObject BodyPrefab;
 
     public List<GameObject> parts = new List<GameObject>();
 
-    public float moveSpeed;
-    public float rotateSpeed;
-    public Vector3 moveRotate;
-
-    public Transform planet;
+    private Vector3 moveRotate;
+    private GameObject lastBody;
 
     Vector2 myCentre = new Vector2(Screen.width / 2, Screen.height / 2);
-    public float touchPos = 0;
+    private float touchPos = 0;
 
     // change this to affect how quickly the number moves toward its destination
     public float lerpSpeed = 0.1f;
@@ -118,6 +126,14 @@ public class SnakeController : MonoBehaviour
         StartCoroutine("DisableInvulnerability");
     }
 
+    public void EnableSlow()
+    {
+        slow = true;
+        GameManager.timerTime = slowTime;
+        GameManager.currentTimerTime = slowTime;
+        StartCoroutine("DisableSlow");
+    }
+
     IEnumerator GenerateBody()
     {
         while (true)
@@ -150,5 +166,12 @@ public class SnakeController : MonoBehaviour
         yield return new WaitForSeconds(invulnerabilityTime);
 
         invulnerability = false;
+    }
+
+    IEnumerator DisableSlow()
+    {
+        yield return new WaitForSeconds(slowTime);
+
+        slow = false;
     }
 }
