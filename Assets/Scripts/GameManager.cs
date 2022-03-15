@@ -8,12 +8,16 @@ public class GameManager : MonoBehaviour
     public GameObject PointPrefab;
     public int highScore;
     public GameObject snake;
+    public GameObject planet;
 
     [Range(16f, 100f)]
     public float powerUpsTimer;
     public float selectedTime;
     public static float timerTime;
     public static float currentTimerTime;
+
+    public float baseMoveSpeed;
+    public float baseGenerateSpeed;
 
     public Image displayTimer;
     public GameObject powerUpTimer;
@@ -39,6 +43,19 @@ public class GameManager : MonoBehaviour
             displayTimer.fillAmount -= 1.0f / timerTime * Time.deltaTime;
         }
         else { powerUpTimer.SetActive(false); displayTimer.fillAmount = 1; }
+
+        SnakeController snakeController = snake.GetComponent<SnakeController>();
+
+        if (snakeController.slow)
+        {
+            snakeController.moveSpeed = baseMoveSpeed / snakeController.slowPower + score / 50;
+            snakeController.generateSpeed = baseGenerateSpeed * snakeController.slowPower - (float)(score / 50) / 200;
+        }
+        else
+        {
+            snakeController.moveSpeed = baseMoveSpeed + score / 50;
+            snakeController.generateSpeed = baseGenerateSpeed - (float)(score / 50) / 200;
+        }
     }
 
     public void Play()
@@ -65,10 +82,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnPoint()
     {
+
+        Vector3 origin = planet.gameObject.transform.position;
         Vector3 postion = Random.onUnitSphere * 5.4f;
 
-        Instantiate(PointPrefab, postion, Quaternion.identity);
-
+        GameObject newPowerUp = Instantiate(PointPrefab, postion, Quaternion.identity) as GameObject;
+        newPowerUp.transform.LookAt(origin);
+        newPowerUp.transform.rotation = newPowerUp.transform.rotation * Quaternion.Euler(-90, 0, 0);
         yield return null;
     }
 
