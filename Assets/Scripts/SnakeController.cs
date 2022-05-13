@@ -25,11 +25,11 @@ public class SnakeController : MonoBehaviour
 
     [Space(20f)]
     public int size = 0;
-    public float generateSpeed = 0.2f;
-    public float moveSpeed;
     public float rotateSpeed;
     public float distance = 0.25f;
 
+    [SerializeField] public float generateSpeed = 0.2f;
+    [SerializeField] public float moveSpeed;
     private int currentSize = 0;
 
     [Space(20f)]

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Body : MonoBehaviour
 {
@@ -22,9 +21,7 @@ public class Body : MonoBehaviour
                 return;
 
             GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
-            GM.SaveData();
-
-            SceneManager.LoadScene("SampleScene");
+            GM.EndGame();
         }
     }
 

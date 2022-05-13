@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject PointPrefab;
     public int highScore;
+
+    public int gold;
+
     public GameObject snake;
     public GameObject planet;
 
@@ -75,6 +80,19 @@ public class GameManager : MonoBehaviour
         score = currentAmount - 2;
     }
 
+    public void ChangeGold(int currentAmount)
+    {
+        TextMeshProUGUI goldText = GameObject.Find("Gold").GetComponent<TextMeshProUGUI>();
+        goldText.text = "Gold: " + currentAmount;
+        gold += currentAmount;
+    }
+
+    public void ChangeGold()
+    {
+        TextMeshProUGUI goldText = GameObject.Find("Gold").GetComponent<TextMeshProUGUI>();
+        goldText.text = "Gold: " + gold;
+    }
+
     public void SpawnNewPoint()
     {
         StartCoroutine("SpawnPoint");
@@ -115,6 +133,8 @@ public class GameManager : MonoBehaviour
         if (score > highScore)
             PlayerPrefs.SetInt("Highscore", score);
 
+        PlayerPrefs.SetInt("Gold", gold);
+
         PlayerPrefs.Save();
     }
 
@@ -123,5 +143,17 @@ public class GameManager : MonoBehaviour
         highScore = PlayerPrefs.GetInt("Highscore");
         Text highScoreText = GameObject.Find("Highscore").GetComponent<Text>();
         highScoreText.text = "Highscore: " + highScore;
+
+        gold = PlayerPrefs.GetInt("Gold");
+        ChangeGold();
+    }
+
+    public void EndGame()
+    {
+        ChangeGold(score);
+
+        SaveData();
+
+        SceneManager.LoadScene("SampleScene");
     }
 }
