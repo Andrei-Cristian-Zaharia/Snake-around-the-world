@@ -31,12 +31,15 @@ public class GameManager : MonoBehaviour
 
     public GameObject playButton;
 
+    public static bool isPlaying;
+
     private static int score;
 
     void Start()
     {
         LoadData();
         snake = GameObject.FindGameObjectWithTag("Snake");
+        isPlaying = false;
     }
 
     private void Update()
@@ -68,6 +71,8 @@ public class GameManager : MonoBehaviour
         SnakeController SC = snake.GetComponent<SnakeController>();
         SC.SpawnSnake();
         playButton.SetActive(false);
+
+        isPlaying = true;
 
         StartCoroutine("SpawnPoint");
         StartCoroutine("SpawnPowerUp");
@@ -151,9 +156,22 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         ChangeGold(score);
-
+        
         SaveData();
 
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        Debug.Log(pauseStatus);
     }
 }
