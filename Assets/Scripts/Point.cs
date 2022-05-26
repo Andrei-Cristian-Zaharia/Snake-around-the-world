@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Point : MonoBehaviour
+public class Point : Collectable
 {
     private void OnTriggerEnter(Collider other)
     {
