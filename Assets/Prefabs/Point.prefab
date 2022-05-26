@@ -4826,7 +4826,7 @@ GameObject:
   - component: {fileID: 4809777750738484072}
   - component: {fileID: 1307500700345311124}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4923,3 +4923,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c393ab28ce60b4bb73e4ffe162031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Point
+  particleEffect: {fileID: 7158067152636534695, guid: e7529e73ec6594e4198704d9e706f8f2,
+    type: 3}

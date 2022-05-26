@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigPoint : MonoBehaviour
+public class BigPoint : Collectable
 {
     private void OnTriggerEnter(Collider other)
     {
