@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MenuManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class MenuManager : MonoBehaviour
 
     public GameObject skinPanel;
     public GameObject themesPanel;
+
+    public TextMeshProUGUI skinText;
 
     public void Back()
     {

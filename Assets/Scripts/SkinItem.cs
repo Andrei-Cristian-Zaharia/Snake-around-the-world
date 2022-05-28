@@ -15,6 +15,7 @@ public class SkinItem : ShopItem
     public override void Equip()
     {
         Material bodyMaterial = Resources.Load<Material>("Materials/SnakeBody");
+
         bodyMaterial.color = skinColor;
     }
 

@@ -49,11 +49,6 @@ public class SnakeController : MonoBehaviour
     // set this as big or small as you want. I'm using a factor of the screen's size
     float deadZone = 0.1f * Mathf.Min(Screen.width, Screen.height);
 
-    private void Start()
-    {
-        GameManager.AddScore(size);
-    }
-
     private void FixedUpdate()
     {
         Vector2 delta = (Vector2)Input.mousePosition - myCentre;
@@ -115,6 +110,7 @@ public class SnakeController : MonoBehaviour
     public void SpawnSnake()
     {
         StartCoroutine("GenerateBody");
+        Body.endGame = false;
         move = true;
     }
 
@@ -140,7 +136,16 @@ public class SnakeController : MonoBehaviour
         {
             yield return new WaitForSeconds(generateSpeed);
 
-            currentSize++; 
+            if (Body.endGame)
+            {
+                if (currentSize == 0)
+                    break;
+
+                StartCoroutine("DestroyTail");
+                continue;
+            }
+
+            currentSize++;
             StartCoroutine("GenerateTail");
 
             if (currentSize == size)
@@ -159,6 +164,16 @@ public class SnakeController : MonoBehaviour
 
         GameObject newBody = Instantiate(BodyPrefab, spawnPoint.transform.position, Quaternion.identity, this.transform) as GameObject;
         parts.Add(newBody);
+    }
+
+    IEnumerator DestroyTail()
+    {
+        yield return new WaitForSeconds(generateSpeed);
+
+        currentSize--;
+        lastBody = parts[0];
+        parts.Remove(parts[0]);
+        Destroy(lastBody);
     }
 
     IEnumerator DisableInvulnerability()

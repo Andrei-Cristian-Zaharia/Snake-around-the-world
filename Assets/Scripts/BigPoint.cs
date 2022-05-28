@@ -14,6 +14,8 @@ public class BigPoint : Collectable
             GameManager.AddScore(SC.size);
 
             GM.SpawnNewPowerUp();
+            
+            hit = true;
             Destroy(this.gameObject);
         }
     }

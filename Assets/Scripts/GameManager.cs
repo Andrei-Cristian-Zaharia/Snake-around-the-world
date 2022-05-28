@@ -8,11 +8,15 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public GameObject PointPrefab;
-    public int highScore;
 
+    public Text highScoreText;
+    public int highScore;
+    
+    public TextMeshProUGUI goldText;
     public int gold;
 
-    public GameObject snake;
+    public GameObject player;
+    private GameObject currentPlayer;
     public GameObject planet;
 
     [Range(16f, 100f)]
@@ -33,12 +37,16 @@ public class GameManager : MonoBehaviour
 
     public static bool isPlaying;
 
+    public Text scoreText;
     private static int score;
+
+    public GameObject EndGamePanel;
+    public static string causeOfDeath;
 
     void Start()
     {
+        Time.timeScale = 1;
         LoadData();
-        snake = GameObject.FindGameObjectWithTag("Snake");
         isPlaying = false;
     }
 
@@ -51,31 +59,63 @@ public class GameManager : MonoBehaviour
             displayTimer.fillAmount -= 1.0f / timerTime * Time.deltaTime;
         }
         else { powerUpTimer.SetActive(false); displayTimer.fillAmount = 1; }
-
-        SnakeController snakeController = snake.GetComponent<SnakeController>();
-
-        if (snakeController.slow)
-        {
-            snakeController.moveSpeed = baseMoveSpeed / snakeController.slowPower + score / 50;
-            snakeController.generateSpeed = baseGenerateSpeed * snakeController.slowPower - (float)(score / 50) / 200;
-        }
-        else
-        {
-            snakeController.moveSpeed = baseMoveSpeed + score / 50;
-            snakeController.generateSpeed = baseGenerateSpeed - (float)(score / 50) / 200;
-        }
     }
 
     public void Play()
     {
+        // spawn snake object at the planet set location for the player
+        GameObject snake = Instantiate(player, planet.GetComponent<Planet>().playerSpawnLocation.position, Quaternion.identity);
+        currentPlayer = snake;
+        planet.GetComponent<Planet>().PrepareForGame(); // Destroy replica for now
+        
         SnakeController SC = snake.GetComponent<SnakeController>();
+        SC.planet = planet.transform;
+        
+        Camera camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        camera.transform.parent = SC.Head.transform;
+        
         SC.SpawnSnake();
+        
         playButton.SetActive(false);
+        goldText.gameObject.SetActive(false);
+        highScoreText.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(true);
+        AddScore(4);
 
         isPlaying = true;
 
         StartCoroutine("SpawnPoint");
         StartCoroutine("SpawnPowerUp");
+    }
+
+    public void RestartGame()
+    {
+        Camera camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        camera.transform.parent = null;
+
+        Destroy(currentPlayer);
+        Time.timeScale = 1;
+        EndGamePanel.SetActive(false);
+        
+        // spawn snake object at the planet set location for the player
+        GameObject snake = Instantiate(player, planet.GetComponent<Planet>().playerSpawnLocation.position, Quaternion.identity);
+        currentPlayer = snake;
+        planet.GetComponent<Planet>().PrepareForGame(); // Destroy replica for now
+
+        SnakeController SC = snake.GetComponent<SnakeController>();
+        SC.planet = planet.transform;
+
+        camera.transform.parent = SC.Head.transform;
+
+        camera.transform.localPosition = new Vector3(0, 24.8f, 0);
+        Vector3 rot = new Vector3(90, 0, 0);
+
+        camera.transform.localRotation = Quaternion.Euler(rot);
+
+        score = 0;
+        AddScore(4);
+
+        SC.SpawnSnake();
     }
 
     public static void AddScore(int currentAmount)
@@ -87,14 +127,12 @@ public class GameManager : MonoBehaviour
 
     public void ChangeGold(int currentAmount)
     {
-        TextMeshProUGUI goldText = GameObject.Find("Gold").GetComponent<TextMeshProUGUI>();
         goldText.text = "Gold: " + currentAmount;
         gold += currentAmount;
     }
 
     public void ChangeGold()
     {
-        TextMeshProUGUI goldText = GameObject.Find("Gold").GetComponent<TextMeshProUGUI>();
         goldText.text = "Gold: " + gold;
     }
 
@@ -105,7 +143,6 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnPoint()
     {
-
         Vector3 origin = planet.gameObject.transform.position;
         Vector3 postion = Random.onUnitSphere * 5.4f;
 
@@ -146,7 +183,6 @@ public class GameManager : MonoBehaviour
     void LoadData()
     {
         highScore = PlayerPrefs.GetInt("Highscore");
-        Text highScoreText = GameObject.Find("Highscore").GetComponent<Text>();
         highScoreText.text = "Highscore: " + highScore;
 
         gold = PlayerPrefs.GetInt("Gold");
@@ -155,10 +191,27 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
-        ChangeGold(score);
+        gold += score;
         
         SaveData();
+        // Time.timeScale = 0;
+        SnakeController SC = currentPlayer.GetComponent<SnakeController>();
+        SC.move = false;
 
+        if (planet.GetComponent<Planet>().planetScore < score)
+        { planet.GetComponent<Planet>().planetScore = score; planet.GetComponent<Planet>().SaveData(); }
+
+        Body.endGame = true;
+
+        EndGamePanel.SetActive(true);
+        
+        TextMeshProUGUI endGameText = GameObject.Find("EndGameText").GetComponent<TextMeshProUGUI>();
+
+        endGameText.text = causeOfDeath;
+    }
+
+    public void GoToMenu()
+    {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -172,6 +225,6 @@ public class GameManager : MonoBehaviour
 
     void OnApplicationPause(bool pauseStatus)
     {
-        Debug.Log(pauseStatus);
+        // Debug.Log(pauseStatus);
     }
 }

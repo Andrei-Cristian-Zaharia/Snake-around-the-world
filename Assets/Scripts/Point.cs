@@ -13,6 +13,8 @@ public class Point : Collectable
             SC.size += 2;
             GameManager.AddScore(SC.size);
             GM.SpawnNewPoint();
+            
+            hit = true;
             Destroy(this.gameObject);
         }
     }
