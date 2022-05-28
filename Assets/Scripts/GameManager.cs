@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
+        
         Time.timeScale = 1;
         LoadData();
         isPlaying = false;
