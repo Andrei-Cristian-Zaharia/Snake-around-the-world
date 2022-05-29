@@ -45,8 +45,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Application.targetFrameRate = 60;
-        
+        Application.targetFrameRate = 60; // set the target frame rate to 60
+
         Time.timeScale = 1;
         LoadData();
         isPlaying = false;
@@ -146,7 +146,8 @@ public class GameManager : MonoBehaviour
     IEnumerator SpawnPoint()
     {
         Vector3 origin = planet.gameObject.transform.position;
-        Vector3 postion = Random.onUnitSphere * 5.4f;
+        
+        Vector3 postion = getSpawnPosition();
 
         GameObject newPowerUp = Instantiate(PointPrefab, postion, Quaternion.identity) as GameObject;
         newPowerUp.transform.LookAt(origin);
@@ -165,11 +166,23 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(selectedTime + 5f);
 
-        Vector3 postion = Random.onUnitSphere * 5.4f;
+        Vector3 postion = getSpawnPosition();
 
         GameObject selectedPowerUp = powerUpsPrefabs[Random.Range(0, powerUpsPrefabs.Length)];
 
         Instantiate(selectedPowerUp, postion, Quaternion.identity);
+    }
+
+    Vector3 getSpawnPosition()
+    {
+        Vector3 postion = Random.onUnitSphere * 5.4f;
+
+        while (Physics.OverlapSphere(postion, 0.3f).Length > 0)
+        {
+            postion = Random.onUnitSphere * 5.4f;
+        }
+
+        return postion;
     }
 
     public void SaveData()
