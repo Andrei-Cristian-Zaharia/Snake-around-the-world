@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlanetChanger : MonoBehaviour
 {
+    #region Fields
+
     private GameManager GM;
 
     public GameObject[] planets;
@@ -19,6 +21,10 @@ public class PlanetChanger : MonoBehaviour
     public GameObject lockedPanel;
     public TextMeshProUGUI lockedText;
 
+    #endregion
+
+    #region Methods
+    
     private void Start()
     {
         GM = this.GetComponent<GameManager>();
@@ -126,7 +132,7 @@ public class PlanetChanger : MonoBehaviour
     {
         if (!planets[currentIndex].GetComponent<Planet>().locked)
         {
-            GM.planet = planets[currentIndex];
+            GM.changePlanet(planets[currentIndex]);
             currentPlanet = planets[currentIndex];
             SaveData();
         }
@@ -181,4 +187,6 @@ public class PlanetChanger : MonoBehaviour
                 planet.locked = true;
         }
     }
+
+    #endregion
 }
