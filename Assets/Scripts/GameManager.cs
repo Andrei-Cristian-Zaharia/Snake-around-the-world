@@ -35,23 +35,19 @@ public class GameManager : MonoBehaviour
 
     public GameObject playButton;
 
-    public static bool isPlaying;
-
     public Text scoreText;
-    private static int score;
+    public static int score;
 
     public GameObject EndGamePanel;
-    public static string causeOfDeath;
 
-    private Planet planetScript;
+    public Planet planetScript;
 
     void Start()
     {
         Application.targetFrameRate = 60; // set the target frame rate to 60
-
+        
         Time.timeScale = 1;
         LoadData();
-        isPlaying = false;
     }
 
     private void Update()
@@ -86,48 +82,14 @@ public class GameManager : MonoBehaviour
         scoreText.gameObject.SetActive(true);
         AddScore(4);
 
-        isPlaying = true;
-
         StartCoroutine("SpawnPoint");
         StartCoroutine("SpawnPowerUp");
     }
 
     public void RestartGame()
     {
-        Camera camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        camera.transform.parent = null;
-
-        Destroy(currentPlayer);
-        Time.timeScale = 1;
-        EndGamePanel.SetActive(false);
-        
-        // spawn snake object at the planet set location for the player
-        GameObject snake = Instantiate(player, planetScript.playerSpawnLocation.position, Quaternion.identity);
-        currentPlayer = snake;
-        planet.GetComponent<Planet>().PrepareForGame(); // Destroy replica for now
-
-        SnakeController SC = snake.GetComponent<SnakeController>();
-        SC.planet = planet.transform;
-
-        camera.transform.parent = SC.Head.transform;
-
-        camera.transform.localPosition = new Vector3(0, 24.8f, 0);
-        Vector3 rot = new Vector3(90, 0, 0);
-
-        camera.transform.localRotation = Quaternion.Euler(rot);
-
-        score = 0;
-        AddScore(4);
-
-        SC.SpawnSnake();
-
-        isPlaying = true;
-
-        if (GameObject.FindGameObjectWithTag("Point") != null) Destroy(GameObject.FindGameObjectWithTag("Point"));
-        if (GameObject.FindGameObjectWithTag("PowerUp") != null) Destroy(GameObject.FindGameObjectWithTag("PowerUp"));
-
-        StartCoroutine("SpawnPoint");
-        StartCoroutine("SpawnPowerUp");
+        StaticManager.isRestart = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public static void AddScore(int currentAmount)
@@ -222,6 +184,8 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
+        StopAllCoroutines();
+
         gold += score;
         
         SaveData();
@@ -232,13 +196,13 @@ public class GameManager : MonoBehaviour
         if (planet.GetComponent<Planet>().planetScore < score)
         { planet.GetComponent<Planet>().planetScore = score; planet.GetComponent<Planet>().SaveData(); }
 
-        Body.endGame = true;
+        StaticManager.endGame = true;
 
         EndGamePanel.SetActive(true);
         
         TextMeshProUGUI endGameText = GameObject.Find("EndGameText").GetComponent<TextMeshProUGUI>();
 
-        endGameText.text = causeOfDeath;
+        endGameText.text = StaticManager.causeOfDeath;
     }
 
     public void GoToMenu()

@@ -7,7 +7,7 @@ public class Collectable : MonoBehaviour
 {
     public new string name;
     public ParticleSystem particleEffect;
-    
+
     protected bool hit = false;
 
     private AudioSource audioSource;

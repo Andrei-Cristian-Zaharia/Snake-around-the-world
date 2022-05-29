@@ -34,6 +34,8 @@ public class PlanetChanger : MonoBehaviour
         EnableControls();
 
         currentPlanet.SetActive(true);
+        
+        if (StaticManager.isRestart) { StaticManager.isRestart = false; GM.Play(); }
     }
 
     public void NextPlanet()

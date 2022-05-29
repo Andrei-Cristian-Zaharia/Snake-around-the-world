@@ -8,12 +8,13 @@ public class Point : Collectable
     {
         if (other.CompareTag("Player"))
         {
-            GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
             SnakeController SC = (SnakeController)GameObject.FindObjectOfType(typeof(SnakeController));
+
+            GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
             SC.size += 2;
             GameManager.AddScore(SC.size);
             GM.SpawnNewPoint();
-            
+
             hit = true;
             Destroy(this.gameObject);
         }

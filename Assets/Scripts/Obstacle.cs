@@ -7,7 +7,7 @@ public class Obstacle : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
-            GameManager.causeOfDeath = "You stuck your head in a fucking cube";
+            StaticManager.causeOfDeath = "You stuck your head in a fucking cube";
             GM.EndGame();
         }
     }

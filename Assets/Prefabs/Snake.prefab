@@ -396,12 +396,14 @@ MonoBehaviour:
   slow: 0
   slowTime: 4
   slowPower: 4
-  size: 6
+  size: 30
   rotateSpeed: 200
   distance: 0.25
   generateSpeed: 0.06
   moveSpeed: 6
   BodyPrefab: {fileID: 7246359241468747911, guid: d8484a3e0445b5341b6d12c9a0c76ba1,
+    type: 3}
+  bodyParticle: {fileID: 5375992378359514789, guid: b1cec8e18bb05e044bfe0a73203b2711,
     type: 3}
   parts: []
   lerpSpeed: 0.05

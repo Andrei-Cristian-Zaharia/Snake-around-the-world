@@ -5,8 +5,6 @@ using UnityEngine;
 public class Body : MonoBehaviour
 {
     private bool canInteract;
-    public ParticleSystem bodyParticle;
-    public static bool endGame = false;
 
     private void Start()
     {
@@ -23,7 +21,7 @@ public class Body : MonoBehaviour
                 return;
 
             GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
-            GameManager.causeOfDeath = "You died trying to eat yourself :(";
+            StaticManager.causeOfDeath = "You died trying to eat yourself :(";
             GM.EndGame();
         }
     }
@@ -33,14 +31,5 @@ public class Body : MonoBehaviour
         yield return new WaitForSeconds(.5f);
 
         canInteract = true;
-    }
-
-    private void OnDestroy()
-    {
-        if (endGame)
-        {
-            ParticleSystem particle = Instantiate(bodyParticle, transform.position, Quaternion.identity);
-            Destroy(particle.gameObject, 0.2f);
-        }
     }
 }

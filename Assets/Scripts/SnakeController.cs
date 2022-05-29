@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class SnakeController : MonoBehaviour
 {
     public bool move;
-
+    
     public GameObject Head;
     public Transform spawnPoint;
     public Transform planet;
@@ -34,6 +34,7 @@ public class SnakeController : MonoBehaviour
 
     [Space(20f)]
     public GameObject BodyPrefab;
+    public ParticleSystem bodyParticle;
 
     public List<GameObject> parts = new List<GameObject>();
 
@@ -110,7 +111,7 @@ public class SnakeController : MonoBehaviour
     public void SpawnSnake()
     {
         StartCoroutine("GenerateBody");
-        Body.endGame = false;
+        StaticManager.endGame = false;
         move = true;
     }
 
@@ -136,7 +137,7 @@ public class SnakeController : MonoBehaviour
         {
             yield return new WaitForSeconds(generateSpeed);
 
-            if (Body.endGame)
+            if (StaticManager.endGame)
             {
                 if (currentSize == 0)
                     break;
@@ -172,6 +173,10 @@ public class SnakeController : MonoBehaviour
 
         currentSize--;
         lastBody = parts[0];
+
+        ParticleSystem particle = Instantiate(bodyParticle, lastBody.transform.position, Quaternion.identity);
+        Destroy(particle.gameObject, 0.2f);
+
         parts.Remove(parts[0]);
         Destroy(lastBody);
     }
