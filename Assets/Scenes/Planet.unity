@@ -2138,6 +2138,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3502a2ed0277959459d36f6eba97a278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  music: {fileID: 21300000, guid: 5f78f26d2a87a024c90ca5a206c5bf61, type: 3}
+  musicMute: {fileID: 21300000, guid: fdf2e0378fad7c849921afb1053cdcdc, type: 3}
+  sound: {fileID: 21300000, guid: 2064219e97ddd044a9b409150684744b, type: 3}
+  soundMute: {fileID: 21300000, guid: 34d1cddf70b856347aaf3005d594f9d2, type: 3}
+  musicButton: {fileID: 1898253728}
+  soundButton: {fileID: 165417116}
 --- !u!4 &651223804
 Transform:
   m_ObjectHideFlags: 0

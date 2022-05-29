@@ -29,7 +29,7 @@ public class Collectable : MonoBehaviour
             if (particleEffect != null)
             {
                 ParticleSystem particle = Instantiate(particleEffect, transform.position, Quaternion.identity);
-                Destroy(particle.gameObject, 0.2f);
+                Destroy(particle.gameObject, 1f);
             }
         }
     }
