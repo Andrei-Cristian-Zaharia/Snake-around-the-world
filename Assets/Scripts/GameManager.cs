@@ -120,6 +120,14 @@ public class GameManager : MonoBehaviour
         AddScore(4);
 
         SC.SpawnSnake();
+
+        isPlaying = true;
+
+        if (GameObject.FindGameObjectWithTag("Point") != null) Destroy(GameObject.FindGameObjectWithTag("Point"));
+        if (GameObject.FindGameObjectWithTag("PowerUp") != null) Destroy(GameObject.FindGameObjectWithTag("PowerUp"));
+
+        StartCoroutine("SpawnPoint");
+        StartCoroutine("SpawnPowerUp");
     }
 
     public static void AddScore(int currentAmount)
