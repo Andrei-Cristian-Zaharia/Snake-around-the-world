@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
     public GameObject EndGamePanel;
     public static string causeOfDeath;
 
+    private Planet planetScript;
+
     void Start()
     {
         Application.targetFrameRate = 60; // set the target frame rate to 60
@@ -66,7 +68,7 @@ public class GameManager : MonoBehaviour
     public void Play()
     {
         // spawn snake object at the planet set location for the player
-        GameObject snake = Instantiate(player, planet.GetComponent<Planet>().playerSpawnLocation.position, Quaternion.identity);
+        GameObject snake = Instantiate(player, planetScript.playerSpawnLocation.position, Quaternion.identity);
         currentPlayer = snake;
         planet.GetComponent<Planet>().PrepareForGame(); // Destroy replica for now
         
@@ -100,7 +102,7 @@ public class GameManager : MonoBehaviour
         EndGamePanel.SetActive(false);
         
         // spawn snake object at the planet set location for the player
-        GameObject snake = Instantiate(player, planet.GetComponent<Planet>().playerSpawnLocation.position, Quaternion.identity);
+        GameObject snake = Instantiate(player, planetScript.playerSpawnLocation.position, Quaternion.identity);
         currentPlayer = snake;
         planet.GetComponent<Planet>().PrepareForGame(); // Destroy replica for now
 
@@ -175,14 +177,20 @@ public class GameManager : MonoBehaviour
 
     Vector3 getSpawnPosition()
     {
-        Vector3 postion = Random.onUnitSphere * 5.4f;
+        Vector3 postion = Random.onUnitSphere * planetScript.planetRadius;
 
         while (Physics.OverlapSphere(postion, 0.3f).Length > 0)
         {
-            postion = Random.onUnitSphere * 5.4f;
+            postion = Random.onUnitSphere * planetScript.planetRadius;
         }
 
         return postion;
+    }
+
+    public void changePlanet(GameObject newPlanet)
+    {
+        planet = newPlanet;
+        planetScript = planet.GetComponent<Planet>();
     }
 
     public void SaveData()

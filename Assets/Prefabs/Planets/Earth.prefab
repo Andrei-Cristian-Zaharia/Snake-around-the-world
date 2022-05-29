@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1969809528
+--- !u!1 &4416795694802156787
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1969809529}
+  - component: {fileID: 4416795694802156786}
   m_Layer: 0
   m_Name: PlayerSpawnLocation
   m_TagString: Untagged
@@ -16,23 +16,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1969809529
+--- !u!4 &4416795694802156786
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1969809528}
+  m_GameObject: {fileID: 4416795694802156787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.01065, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1406321702009368656}
-  m_Father: {fileID: 6502677914070750174}
+  - {fileID: 3373159200949544155}
+  m_Father: {fileID: 7455070730916972373}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5869870027557521764
+--- !u!1 &7799790319042010607
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,50 +40,50 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6502677914070750174}
-  - component: {fileID: 7895369289026772091}
-  - component: {fileID: 5365207452908841137}
-  - component: {fileID: 6752195881670016280}
-  - component: {fileID: 3469287838501962487}
-  - component: {fileID: 3469287838501962491}
+  - component: {fileID: 7455070730916972373}
+  - component: {fileID: 5826075452245592304}
+  - component: {fileID: 8592471751314127930}
+  - component: {fileID: 6989307525099891091}
+  - component: {fileID: 967990935264614012}
+  - component: {fileID: 967990935264614000}
   m_Layer: 0
-  m_Name: Planet
+  m_Name: Earth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6502677914070750174
+  m_IsActive: 0
+--- !u!4 &7455070730916972373
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869870027557521764}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20, y: 0, z: 0}
+  m_GameObject: {fileID: 7799790319042010607}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 500, y: 500, z: 500}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1969809529}
+  - {fileID: 4416795694802156786}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7895369289026772091
+--- !u!33 &5826075452245592304
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869870027557521764}
+  m_GameObject: {fileID: 7799790319042010607}
   m_Mesh: {fileID: 4711208715938537054, guid: 0ec201f47aeacee44bb94050386766e6, type: 3}
---- !u!23 &5365207452908841137
+--- !u!23 &8592471751314127930
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869870027557521764}
+  m_GameObject: {fileID: 7799790319042010607}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -119,26 +119,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &6752195881670016280
+--- !u!135 &6989307525099891091
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869870027557521764}
+  m_GameObject: {fileID: 7799790319042010607}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.009999997
   m_Center: {x: 0.000000005587935, y: 0.000000026077025, z: 0}
---- !u!111 &3469287838501962487
+--- !u!111 &967990935264614012
 Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869870027557521764}
+  m_GameObject: {fileID: 7799790319042010607}
   m_Enabled: 1
   serializedVersion: 3
   m_Animation: {fileID: 0}
@@ -151,31 +151,31 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &3469287838501962491
+--- !u!114 &967990935264614000
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869870027557521764}
+  m_GameObject: {fileID: 7799790319042010607}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 519c46b002aafb34a860e5cd632d65ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: 
-  playerSpawnLocation: {fileID: 1969809529}
-  snakeReplica: {fileID: 1406321702009368658}
+  name: Earth
+  playerSpawnLocation: {fileID: 4416795694802156786}
+  snakeReplica: {fileID: 3373159200949544153}
   planetScore: 0
   reqScore: 100
   planetRadius: 5.4
   locked: 0
---- !u!1001 &8895205951627088240
+--- !u!1001 &5060219588498458107
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1969809529}
+    m_TransformParent: {fileID: 4416795694802156786}
     m_Modifications:
     - target: {fileID: 7563334381496738080, guid: 47e64be2dd25c7d4b8dac131446eb183,
         type: 3}
@@ -185,17 +185,17 @@ PrefabInstance:
     - target: {fileID: 7563334381496738080, guid: 47e64be2dd25c7d4b8dac131446eb183,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.0025
+      value: 0.002
       objectReference: {fileID: 0}
     - target: {fileID: 7563334381496738080, guid: 47e64be2dd25c7d4b8dac131446eb183,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.0025
+      value: 0.002
       objectReference: {fileID: 0}
     - target: {fileID: 7563334381496738080, guid: 47e64be2dd25c7d4b8dac131446eb183,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.0025
+      value: 0.002
       objectReference: {fileID: 0}
     - target: {fileID: 7563334381496738080, guid: 47e64be2dd25c7d4b8dac131446eb183,
         type: 3}
@@ -252,17 +252,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Snake Replica
       objectReference: {fileID: 0}
+    - target: {fileID: 7563334381496738082, guid: 47e64be2dd25c7d4b8dac131446eb183,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47e64be2dd25c7d4b8dac131446eb183, type: 3}
---- !u!4 &1406321702009368656 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7563334381496738080, guid: 47e64be2dd25c7d4b8dac131446eb183,
-    type: 3}
-  m_PrefabInstance: {fileID: 8895205951627088240}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1406321702009368658 stripped
+--- !u!1 &3373159200949544153 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7563334381496738082, guid: 47e64be2dd25c7d4b8dac131446eb183,
     type: 3}
-  m_PrefabInstance: {fileID: 8895205951627088240}
+  m_PrefabInstance: {fileID: 5060219588498458107}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3373159200949544155 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7563334381496738080, guid: 47e64be2dd25c7d4b8dac131446eb183,
+    type: 3}
+  m_PrefabInstance: {fileID: 5060219588498458107}
   m_PrefabAsset: {fileID: 0}

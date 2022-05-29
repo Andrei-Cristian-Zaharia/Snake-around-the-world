@@ -12,6 +12,7 @@ public class Planet : MonoBehaviour
     public int planetScore = 0;
     public int reqScore = 100;
 
+    public float planetRadius = 5.4f;
     public bool locked = false;
 
     public void PrepareForGame()
