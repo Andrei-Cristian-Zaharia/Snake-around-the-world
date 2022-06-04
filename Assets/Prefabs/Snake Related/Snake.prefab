@@ -391,16 +391,10 @@ MonoBehaviour:
   Head: {fileID: 1813076020886940313}
   spawnPoint: {fileID: 7333218371103884470}
   planet: {fileID: 0}
-  invulnerability: 0
-  invulnerabilityTime: 4
-  slow: 0
-  slowTime: 4
-  slowPower: 4
-  size: 30
+  size: 4
   rotateSpeed: 200
-  distance: 0.25
-  generateSpeed: 0.06
-  moveSpeed: 6
+  moveSpeed: 5.2
+  currentMoveSpeed: 0
   BodyPrefab: {fileID: 7246359241468747911, guid: d8484a3e0445b5341b6d12c9a0c76ba1,
     type: 3}
   bodyParticle: {fileID: 5375992378359514789, guid: b1cec8e18bb05e044bfe0a73203b2711,

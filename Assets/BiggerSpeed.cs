@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slow : MonoBehaviour
+public class BiggerSpeed : Collectable
 {
+    public float amount;
+    public float duration;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
             SnakeController SC = (SnakeController)GameObject.FindObjectOfType(typeof(SnakeController));
-            SC.EnableSlow();
-
-            GM.SpawnNewPowerUp();
+            SC.EnableChangeSpeedForSeconds(amount, duration);
+  
             Destroy(this.gameObject);
         }
     }

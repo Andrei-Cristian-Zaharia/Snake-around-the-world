@@ -1,37 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SnakeController : MonoBehaviour
 {
     public bool move;
+    public bool invertControls;
     
     public GameObject Head;
     public Transform spawnPoint;
     public Transform planet;
 
     [Space(20f)]
-    public bool invulnerability;
-    [Range(1f, 10f)]
-    public float invulnerabilityTime = 2f;
-
-    [Space(10f)]
-    public bool slow;
-    [Range(1f, 10f)]
-    public float slowTime = 4f;
-    [Range(1f, 10)]
-    public float slowPower = 2;
-
-    [Space(20f)]
     public int size = 0;
-    public float rotateSpeed;
-    public float distance = 0.25f;
-
-    [SerializeField] public float generateSpeed = 0.2f;
-    [SerializeField] public float moveSpeed;
     private int currentSize = 0;
+    public float rotateSpeed;
 
+    [Range(0f, 20f)]
+    public float moveSpeed;
+    
+    [HideInInspector]
+    public float currentMoveSpeed;
+    private float lerpMoveSpeed = 0.8f;
+    
     [Space(20f)]
     public GameObject BodyPrefab;
     public ParticleSystem bodyParticle;
@@ -54,27 +45,52 @@ public class SnakeController : MonoBehaviour
     {
         Vector2 delta = (Vector2)Input.mousePosition - myCentre;
 
+        if (currentMoveSpeed > moveSpeed + 0.1f || currentMoveSpeed < moveSpeed - 0.1f)
+        {
+            currentMoveSpeed = Mathf.Lerp(currentMoveSpeed, moveSpeed, Time.deltaTime * lerpMoveSpeed);
+        }
+
         // if the mouse is down / a touch is active...
         if (Input.GetMouseButton(0) == true)
         {
-            // for the X axis...
-            if (delta.x > deadZone)
+            if (!invertControls)
             {
-                // if we're to the right of centre and out of the deadzone, move toward 1
-                touchPos = Mathf.Lerp(touchPos, 1f, lerpSpeed);
-                moveRotate = new Vector3(0, touchPos, 0);
-            }
-            else if (delta.x < -deadZone)
-            {
-                // if we're to the left of centre and out of the deadzone, move toward -1
-                touchPos = Mathf.Lerp(touchPos, -1f, lerpSpeed);
-                moveRotate = new Vector3(0, touchPos, 0);
+                if (delta.x > deadZone)
+                {
+                    // if we're to the right of centre and out of the deadzone, move toward 1
+                    touchPos = Mathf.Lerp(touchPos, 1f, lerpSpeed);
+                    moveRotate = new Vector3(0, touchPos, 0);
+                }
+                else if (delta.x < -deadZone)
+                {
+                    // if we're to the left of centre and out of the deadzone, move toward -1
+                    touchPos = Mathf.Lerp(touchPos, -1f, lerpSpeed);
+                    moveRotate = new Vector3(0, touchPos, 0);
+                }
+                else
+                {
+                    // otherwise, we're in the deadzone, move toward 0
+                    touchPos = 0;
+                    moveRotate = new Vector3(0, touchPos, 0).normalized;
+                }
             }
             else
             {
-                // otherwise, we're in the deadzone, move toward 0
-                touchPos = 0;
-                moveRotate = new Vector3(0, touchPos, 0).normalized;
+                if (delta.x > deadZone)
+                {
+                    touchPos = Mathf.Lerp(touchPos, -1f, lerpSpeed);
+                    moveRotate = new Vector3(0, touchPos, 0);
+                }
+                else if (delta.x < -deadZone)
+                {
+                    touchPos = Mathf.Lerp(touchPos, 1f, lerpSpeed);
+                    moveRotate = new Vector3(0, touchPos, 0);
+                }
+                else
+                {
+                    touchPos = 0;
+                    moveRotate = new Vector3(0, touchPos, 0).normalized;
+                }
             }
         }
         else
@@ -94,7 +110,7 @@ public class SnakeController : MonoBehaviour
         if (move)
         {
             Vector3 moveForward = new Vector3(0, 0, 1).normalized;
-            Head.transform.Translate(moveForward * moveSpeed * Time.deltaTime);
+            Head.transform.Translate(moveForward * currentMoveSpeed * Time.deltaTime);
 
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
                 Head.transform.Rotate(moveRotate * rotateSpeed * (Time.deltaTime * 2));
@@ -115,27 +131,40 @@ public class SnakeController : MonoBehaviour
         move = true;
     }
 
-    public void EnableInvulnerability()
+    public void EnableInvulnerability(float duration)
     {
-        invulnerability = true;
-        GameManager.timerTime = invulnerabilityTime;
-        GameManager.currentTimerTime = invulnerabilityTime;
-        StartCoroutine("DisableInvulnerability");
+        StaticManager.invulnerability = true;
+
+        GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
+        GM.CreateDisplayTimer(duration);
+        StartCoroutine(DisableInvulnerability(duration));
     }
 
-    public void EnableSlow()
+    public void EnableChangeSpeedForSeconds(float amount, float duration)
     {
-        slow = true;
-        GameManager.timerTime = slowTime;
-        GameManager.currentTimerTime = slowTime;
-        StartCoroutine("DisableSlow");
+        moveSpeed += amount;
+
+        // GameManager.timerTime = amount;
+        // GameManager.currentTimerTime = amount;
+        GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
+        GM.CreateDisplayTimer(duration);
+        StartCoroutine(DisableChangeSpeedForSeconds(duration, amount));
+    }
+
+    public void EnableInvert(float duration)
+    {
+        invertControls = true;
+
+        GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
+        GM.CreateDisplayTimer(duration);
+        StartCoroutine(DisableInvert(duration));
     }
 
     IEnumerator GenerateBody()
     {
         while (true)
         {
-            yield return new WaitForSeconds(generateSpeed);
+            yield return new WaitForSeconds(1 / (3 * currentMoveSpeed));
 
             if (StaticManager.endGame)
             {
@@ -161,7 +190,7 @@ public class SnakeController : MonoBehaviour
 
     IEnumerator GenerateTail()
     {
-        yield return new WaitForSeconds(generateSpeed);
+        yield return new WaitForSeconds(1 / (3 * currentMoveSpeed));
 
         GameObject newBody = Instantiate(BodyPrefab, spawnPoint.transform.position, Quaternion.identity, this.transform) as GameObject;
         parts.Add(newBody);
@@ -169,7 +198,7 @@ public class SnakeController : MonoBehaviour
 
     IEnumerator DestroyTail()
     {
-        yield return new WaitForSeconds(generateSpeed);
+        yield return new WaitForSeconds(0.06f);
 
         currentSize--;
         lastBody = parts[0];
@@ -181,17 +210,24 @@ public class SnakeController : MonoBehaviour
         Destroy(lastBody);
     }
 
-    IEnumerator DisableInvulnerability()
+    IEnumerator DisableInvulnerability(float duration)
     {
-        yield return new WaitForSeconds(invulnerabilityTime);
+        yield return new WaitForSeconds(duration);
 
-        invulnerability = false;
+        StaticManager.invulnerability = false;
     }
 
-    IEnumerator DisableSlow()
+    IEnumerator DisableChangeSpeedForSeconds(float duration, float amount)
     {
-        yield return new WaitForSeconds(slowTime);
+        yield return new WaitForSeconds(duration);
 
-        slow = false;
+        moveSpeed -= amount;
+    }
+
+    IEnumerator DisableInvert(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        invertControls = false;
     }
 }

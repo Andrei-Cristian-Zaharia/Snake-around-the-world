@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigPoint : Collectable
+public class Slow : Collectable
 {
-    public int amount;
+    public float amount;
+    public float duration;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -12,11 +13,9 @@ public class BigPoint : Collectable
         {
             GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
             SnakeController SC = (SnakeController)GameObject.FindObjectOfType(typeof(SnakeController));
-            SC.size += amount;
-            GameManager.AddScore(amount);
-
+            SC.EnableChangeSpeedForSeconds(-amount, duration);
             GM.SpawnNewPowerUp();
-            
+
             hit = true;
             Destroy(this.gameObject);
         }

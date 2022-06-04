@@ -17,7 +17,7 @@ public class Body : MonoBehaviour
         {
             SnakeController SC = (SnakeController)GameObject.FindObjectOfType(typeof(SnakeController));
 
-            if (SC.invulnerability == true)
+            if (StaticManager.invulnerability == true)
                 return;
 
             GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));

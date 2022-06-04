@@ -114,6 +114,8 @@ MonoBehaviour:
   name: BigPoint
   particleEffect: {fileID: 6076970008008395084, guid: f8a118c00ba2e3a41b074d6788d870b7,
     type: 3}
+  isDebuff: 0
+  amount: 10
 --- !u!82 &412771469567739236
 AudioSource:
   m_ObjectHideFlags: 0
