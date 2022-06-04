@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Point : Collectable
 {
+    public int amount;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -11,8 +13,8 @@ public class Point : Collectable
             SnakeController SC = (SnakeController)GameObject.FindObjectOfType(typeof(SnakeController));
 
             GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
-            SC.size += 2;
-            GameManager.AddScore(SC.size);
+            SC.size += amount;
+            GameManager.AddScore(amount);
             GM.SpawnNewPoint();
 
             hit = true;

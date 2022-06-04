@@ -19,6 +19,11 @@ public static class StaticManager
     /// Returns if the game has ended.
     /// </summary>
     public static bool endGame = false;
-    
+
+    /// <summary>
+    /// Returns if the playes is invulnerable.
+    /// </summary>
+    public static bool invulnerability;
+
     #endregion
 }

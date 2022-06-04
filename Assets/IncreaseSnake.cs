@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigPoint : Collectable
+public class IncreaseSnake : Collectable
 {
     public int amount;
 
@@ -10,14 +10,9 @@ public class BigPoint : Collectable
     {
         if (other.CompareTag("Player"))
         {
-            GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
             SnakeController SC = (SnakeController)GameObject.FindObjectOfType(typeof(SnakeController));
             SC.size += amount;
-            GameManager.AddScore(amount);
 
-            GM.SpawnNewPowerUp();
-            
-            hit = true;
             Destroy(this.gameObject);
         }
     }

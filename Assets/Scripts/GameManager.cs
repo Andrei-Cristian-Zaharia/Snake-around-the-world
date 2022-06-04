@@ -1,47 +1,54 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Well, only the script that handles the game. =)))))
+/// I hope I won't forget what the fuck I did here. If I do that ... well, it was nice to work at it.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
-    public GameObject PointPrefab;
+    #region public Fields
 
-    public Text highScoreText;
-    public int highScore;
-    
-    public TextMeshProUGUI goldText;
+    public TextMeshProUGUI planetScore; // text that displays the score for each planet
+    public TextMeshProUGUI goldText; // text that displays the gold => this should have been only in shop manager or game menu, move this ;) thx
     public int gold;
 
-    public GameObject player;
-    private GameObject currentPlayer;
-    public GameObject planet;
+    public GameObject player; // current player
+    public GameObject planet; // current planet
 
-    [Range(16f, 100f)]
-    public float powerUpsTimer;
-    public float selectedTime;
-    public static float timerTime;
-    public static float currentTimerTime;
+    [Range(8f, 100f)]
+    public float powerUpsTimer; // time that it takes to spawn a new power up
+    [Range(8f, 100f)]
+    public float debuffTimer; // time that it takes to spawn a new debuff
 
-    public float baseMoveSpeed;
-    public float baseGenerateSpeed;
+    public GameObject displayTimerPrefab; // the timer that will be spawned for an ability / debuff
+    public GameObject displayTimerParent; // the parent that holds the timers for each active ability / debuff
 
-    public Image displayTimer;
-    public GameObject powerUpTimer;
+    public GameObject PointPrefab; // point prefab as it's name says =)))))
+    public GameObject[] powerUpsPrefabs; // prefabs for power ups
+    public GameObject[] debuffsPrefabs; // prefabs for debuffs
 
-    public GameObject[] powerUpsPrefabs;
-
-    public GameObject playButton;
+    public GameObject playButton; // move this to game menu ;) thx
 
     public Text scoreText;
-    public static int score;
+    public static int score = -2;
 
     public GameObject EndGamePanel;
 
-    public Planet planetScript;
+    #endregion
 
+    #region private Fields
+
+    private Planet planetScript;
+    private GameObject currentPlayer;
+
+    #endregion
+
+    #region Methods
+    
     void Start()
     {
         Application.targetFrameRate = 60; // set the target frame rate to 60
@@ -50,27 +57,18 @@ public class GameManager : MonoBehaviour
         LoadData();
     }
 
-    private void Update()
-    {
-        if (currentTimerTime > 0)
-        {
-            powerUpTimer.SetActive(true);
-            currentTimerTime -= Time.deltaTime;
-            displayTimer.fillAmount -= 1.0f / timerTime * Time.deltaTime;
-        }
-        else { powerUpTimer.SetActive(false); displayTimer.fillAmount = 1; }
-    }
-
     public void Play()
     {
         // spawn snake object at the planet set location for the player
         GameObject snake = Instantiate(player, planetScript.playerSpawnLocation.position, Quaternion.identity);
         currentPlayer = snake;
         planet.GetComponent<Planet>().PrepareForGame(); // Destroy replica for now
-        
+
+
         SnakeController SC = snake.GetComponent<SnakeController>();
         SC.planet = planet.transform;
-        
+
+        SC.currentMoveSpeed = SC.moveSpeed;
         Camera camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         camera.transform.parent = SC.Head.transform;
         
@@ -78,12 +76,13 @@ public class GameManager : MonoBehaviour
         
         playButton.SetActive(false);
         goldText.gameObject.SetActive(false);
-        highScoreText.gameObject.SetActive(false);
+        planetScore.gameObject.SetActive(false);
         scoreText.gameObject.SetActive(true);
-        AddScore(4);
+        AddScore(SC.size);
 
-        StartCoroutine("SpawnPoint");
-        StartCoroutine("SpawnPowerUp");
+        SpawnNewPoint();
+        SpawnNewPowerUp();
+        SpawnNewDebuff();
     }
 
     public void RestartGame()
@@ -94,9 +93,9 @@ public class GameManager : MonoBehaviour
 
     public static void AddScore(int currentAmount)
     {
+        score += currentAmount;
         Text scoreText = GameObject.Find("Score").GetComponent<Text>();
-        scoreText.text = "Score: " + (currentAmount - 2);
-        score = currentAmount - 2;
+        scoreText.text = "Score: " + score;
     }
 
     public void ChangeGold(int currentAmount)
@@ -129,20 +128,40 @@ public class GameManager : MonoBehaviour
 
     public void SpawnNewPowerUp()
     {
-        selectedTime = Random.Range(15f, powerUpsTimer) - 10f;
-
-        StartCoroutine("SpawnPowerUp");
+        float selectedTime = Random.Range(15f, powerUpsTimer) - 10f;
+        
+        StartCoroutine(SpawnPowerUp(selectedTime));
     }
 
-    IEnumerator SpawnPowerUp()
+    IEnumerator SpawnPowerUp(float time)
     {
-        yield return new WaitForSeconds(selectedTime + 5f);
+        yield return new WaitForSeconds(time + 5f);
 
         Vector3 postion = getSpawnPosition();
 
         GameObject selectedPowerUp = powerUpsPrefabs[Random.Range(0, powerUpsPrefabs.Length)];
 
         Instantiate(selectedPowerUp, postion, Quaternion.identity);
+    }
+
+    public void SpawnNewDebuff()
+    {
+        float selectedTime = Random.Range(15f, debuffTimer) - 10f;
+
+        StartCoroutine(SpawnDebuff(selectedTime));
+    }
+
+    IEnumerator SpawnDebuff(float time)
+    {
+        yield return new WaitForSeconds(time + 8f);
+
+        Vector3 postion = getSpawnPosition();
+
+        GameObject selectedDebuff = debuffsPrefabs[Random.Range(0, debuffsPrefabs.Length)];
+
+        GameObject obj = Instantiate(selectedDebuff, postion, Quaternion.identity);
+
+        Destroy(obj, 5f);
     }
 
     Vector3 getSpawnPosition()
@@ -161,13 +180,12 @@ public class GameManager : MonoBehaviour
     {
         planet = newPlanet;
         planetScript = planet.GetComponent<Planet>();
+
+        planetScore.text = "Score on " + planetScript.name + ": \n" + planetScript.planetScore;
     }
 
     public void SaveData()
     {
-        if (score > highScore)
-            PlayerPrefs.SetInt("Highscore", score);
-
         PlayerPrefs.SetInt("Gold", gold);
 
         PlayerPrefs.Save();
@@ -175,9 +193,6 @@ public class GameManager : MonoBehaviour
 
     void LoadData()
     {
-        highScore = PlayerPrefs.GetInt("Highscore");
-        highScoreText.text = "Highscore: " + highScore;
-
         gold = PlayerPrefs.GetInt("Gold");
         ChangeGold();
     }
@@ -189,7 +204,7 @@ public class GameManager : MonoBehaviour
         gold += score;
         
         SaveData();
-        // Time.timeScale = 0;
+        
         SnakeController SC = currentPlayer.GetComponent<SnakeController>();
         SC.move = false;
 
@@ -210,6 +225,15 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void CreateDisplayTimer(float time) 
+    {
+        GameObject timer = Instantiate(displayTimerPrefab, displayTimerParent.transform);
+        DisplayTimer DT = timer.GetComponent<DisplayTimer>();
+        timer.transform.parent = displayTimerParent.transform;
+        
+        DT.Init(time);
+    }
+
     void OnApplicationFocus(bool hasFocus)
     {
         if (!hasFocus)
@@ -222,4 +246,6 @@ public class GameManager : MonoBehaviour
     {
         // Debug.Log(pauseStatus);
     }
+
+    #endregion
 }

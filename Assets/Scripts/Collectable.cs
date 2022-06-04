@@ -8,9 +8,11 @@ public class Collectable : MonoBehaviour
     public new string name;
     public ParticleSystem particleEffect;
 
+    public bool isDebuff = false;
+
     protected bool hit = false;
 
-    private AudioSource audioSource;
+    protected AudioSource audioSource;
 
     private void Start()
     {
@@ -19,18 +21,46 @@ public class Collectable : MonoBehaviour
 
     public void OnDestroy()
     {
-        if (hit)
+        if (!isDebuff)
         {
-            if (AudioManager.toogleAudio)
+            if (hit)
             {
-                audioSource.Play();
-            }
+                if (AudioManager.toogleAudio)
+                {
+                    audioSource.Play();
+                }
 
+                if (particleEffect != null)
+                {
+                    ParticleSystem particle = Instantiate(particleEffect, transform.position, Quaternion.identity);
+                    Destroy(particle.gameObject, 1f);
+                }
+            }
+        }
+        else
+        {
+            if (hit)
+            {
+                if (AudioManager.toogleAudio)
+                {
+                    audioSource.Play();
+                }
+
+                if (particleEffect != null)
+                {
+                    ParticleSystem particle = Instantiate(particleEffect, transform.position, Quaternion.identity);
+                    Destroy(particle.gameObject, 1f);
+                }
+            }
+            else
             if (particleEffect != null)
             {
                 ParticleSystem particle = Instantiate(particleEffect, transform.position, Quaternion.identity);
                 Destroy(particle.gameObject, 1f);
             }
+
+            GameManager GM = (GameManager)GameObject.FindObjectOfType(typeof(GameManager));
+            GM.SpawnNewDebuff();
         }
     }
 }

@@ -15,11 +15,14 @@ public class ShopManager : MonoBehaviour
     private void Start()
     {
         LoadData();
+        ChangeSkin(currentSkin);
     }
 
     public void ChangeSkin(int ID)
     {
         skinItems.Find(x => x.ID == ID).Equip();
+
+        SaveData();
     }
 
     void SaveData()
